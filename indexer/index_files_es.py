@@ -1,16 +1,31 @@
+import time
 import psycopg2
 from elasticsearch import Elasticsearch
 
 DB_CONFIG = {
-    "host": "localhost",
+    "host": "codeseer-postgres",
     "port": 5432,
     "dbname": "codeseer",
     "user": "codeseer",
-    "password": "codeseer"
+    "password": "codeseer",
 }
 
-ES_HOST = "http://localhost:9200"
+ES_HOST = "http://codeseer-es:9200"
 ES_INDEX = "files"
+
+
+def wait_for_elasticsearch(es, retries=60, delay=2):
+    for i in range(retries):
+        try:
+            info = es.info()
+            version = info["version"]["number"]
+            print(f"Elasticsearch ready (version {version})")
+            return
+        except Exception:
+            print(f"Waiting for Elasticsearch HTTP... ({i+1}/{retries})")
+            time.sleep(delay)
+
+    raise RuntimeError("Elasticsearch not reachable after waiting")
 
 
 def fetch_files_from_db():
@@ -23,55 +38,51 @@ def fetch_files_from_db():
     """)
 
     rows = cur.fetchall()
-
     cur.close()
     conn.close()
-
     return rows
 
 
 def ensure_index(es):
-    try:
-        es.indices.create(
-            index=ES_INDEX,
-            body={
-                "mappings": {
-                    "properties": {
-                        "path": {"type": "text"},
-                        "language": {"type": "keyword"},
-                        "size_bytes": {"type": "integer"}
-                    }
-                }
+    if es.indices.exists(index=ES_INDEX):
+        print("Elasticsearch index already exists")
+        return
+
+    es.indices.create(
+        index=ES_INDEX,
+        mappings={
+            "properties": {
+                "path": {"type": "text"},
+                "language": {"type": "keyword"},
+                "size_bytes": {"type": "integer"},
             }
-        )
-        print("Elasticsearch index created")
-    except Exception as e:
-        # Index already exists → ignore
-        if "resource_already_exists_exception" in str(e):
-            print("Elasticsearch index already exists")
-        else:
-            raise
-
-
+        },
+    )
+    print("Elasticsearch index created")
 
 
 def index_files():
-    es = Elasticsearch(ES_HOST)
+    es = Elasticsearch(
+        ES_HOST,
+        request_timeout=30,
+        retry_on_timeout=True,
+        max_retries=5,
+    )
+
+    wait_for_elasticsearch(es)
     ensure_index(es)
 
     rows = fetch_files_from_db()
 
-    for row in rows:
-        file_id, path, language, size_bytes = row
-
+    for file_id, path, language, size_bytes in rows:
         es.index(
             index=ES_INDEX,
             id=file_id,
             document={
                 "path": path,
                 "language": language,
-                "size_bytes": size_bytes
-            }
+                "size_bytes": size_bytes,
+            },
         )
 
     print(f"Indexed {len(rows)} files into Elasticsearch")
