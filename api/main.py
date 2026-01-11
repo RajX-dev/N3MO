@@ -1,8 +1,13 @@
 from fastapi import FastAPI
 import psycopg2
 import psycopg2.extras
+from elasticsearch import Elasticsearch
+
 
 app = FastAPI()
+es = Elasticsearch("http://codeseer-es:9200")
+
+
 
 DB_CONFIG = {
     "host": "postgres",
@@ -16,6 +21,36 @@ DB_CONFIG = {
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+@app.get("/search")
+def search_files(q: str):
+    response = es.search(
+        index="files",
+        body={
+            "query": {
+                "match": {
+                    "path": q
+                }
+            }
+        }
+    )
+
+    results = [
+        {
+            "id": hit["_id"],
+            "path": hit["_source"]["path"],
+            "language": hit["_source"]["language"],
+            "size_bytes": hit["_source"]["size_bytes"]
+        }
+        for hit in response["hits"]["hits"]
+    ]
+
+    return {
+        "query": q,
+        "count": len(results),
+        "results": results
+    }
+
 
 
 @app.get("/files")

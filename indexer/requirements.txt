@@ -1,2 +1,2 @@
 psycopg2-binary
-elasticsearch
+elasticsearch==8.11.1
