@@ -16,13 +16,59 @@ class Chunk:
     start_line: int
     end_line: int
     content: str
-    
-
 
 
 def _stable_chunk_id(file_path: str, start_line: int, chunk_type: str) -> str:
     raw = f"{file_path}:{start_line}:{chunk_type}"
     return hashlib.sha1(raw.encode()).hexdigest()
+
+
+def chunk_docs(file_path: str, content: str) -> List[Chunk]:
+    """
+    Chunk documentation files by markdown-style section headers.
+    """
+    chunks: List[Chunk] = []
+    lines = content.splitlines()
+
+    current = []
+    start_line = 0
+
+    for i, line in enumerate(lines):
+        if line.strip().startswith("#"):
+            if current:
+                chunk_id = _stable_chunk_id(file_path, start_line, "doc")
+                chunks.append(
+                    Chunk(
+                        id=chunk_id,
+                        file_path=file_path,
+                        language=None,
+                        chunk_type="doc",
+                        start_line=start_line + 1,
+                        end_line=i,
+                        content="\n".join(current).strip()
+                    )
+                )
+                current = []
+
+            start_line = i
+
+        current.append(line)
+
+    if current:
+        chunk_id = _stable_chunk_id(file_path, start_line, "doc")
+        chunks.append(
+            Chunk(
+                id=chunk_id,
+                file_path=file_path,
+                language=None,
+                chunk_type="doc",
+                start_line=start_line + 1,
+                end_line=len(lines),
+                content="\n".join(current).strip()
+            )
+        )
+
+    return chunks
 
 
 def chunk_config(file_path: str, content: str) -> List[Chunk]:
@@ -69,13 +115,13 @@ def chunk_config(file_path: str, content: str) -> List[Chunk]:
                 content="\n".join(current).strip()
             )
         )
-def chunk_python(
-    file_path: str,
-    content: str
-) -> List[Chunk]:
+
+    return chunks
+
+
+def chunk_python(file_path: str, content: str) -> List[Chunk]:
     """
     Chunk Python source files by top-level class and function definitions.
-    Strategy: detect 'class' and 'def' at column 0.
     """
     chunks: List[Chunk] = []
     lines = content.splitlines()
@@ -86,7 +132,6 @@ def chunk_python(
 
     for i, line in enumerate(lines):
         stripped = line.lstrip()
-
         is_top_level = not line.startswith((" ", "\t"))
 
         if is_top_level and (stripped.startswith("def ") or stripped.startswith("class ")):
