@@ -132,7 +132,3 @@ Contributions are welcome! Please open an issue to discuss proposed changes or a
 ## 📄 License
 
 This project is licensed under the MIT License.
-
-```
-
-```
