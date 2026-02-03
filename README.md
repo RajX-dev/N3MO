@@ -2,39 +2,20 @@
 
 **A code intelligence engine that transforms repositories into queryable knowledge graphs of code symbols, enabling deep code understanding, dependency analysis, and AI-assisted reasoning.**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-13+-316192.svg)](https://www.postgresql.org/)
-
 ---
 
 ## Overview
 
 CodeSeer addresses a fundamental challenge in software engineering: **understanding large codebases**. Unlike simple code search tools that rely on text matching, CodeSeer models code structure first—capturing symbols, their relationships, and their semantics—enabling precise queries about dependencies, impact analysis, and architectural patterns.
 
-### The Problem
-
-Large codebases are difficult to navigate because:
-- Text search is imprecise and context-unaware
-- Dependencies are implicit and undocumented
-- Architectural knowledge exists only in engineers' minds
-- Impact analysis requires deep manual investigation
-
 ### The Solution
 
 CodeSeer answers critical questions that traditional tools cannot:
-- *What functions exist in this repository?*
-- *Where is this class being used?*
-- *What will break if I modify this function?*
-- *How do these components actually connect?*
 
----
-
-## Core Design Philosophy
-
-> **Structure before semantics.**
-
-Code must be understood as a graph of symbols and relationships before meaning-based search or AI reasoning can be trusted. This principle drives every architectural decision in CodeSeer.
+- What functions exist in this repository?
+- Where is this class being used?
+- What will break if I modify this function?
+- How do these components actually connect?
 
 ---
 
@@ -44,127 +25,82 @@ Code must be understood as a graph of symbols and relationships before meaning-b
 
 CodeSeer builds a **symbol-centric knowledge graph** stored in PostgreSQL:
 
-```
-Project
-  └── Symbols (UUID-based)
-      ├── Functions
-      ├── Classes
-      ├── Methods
-      └── Variables
-          │
-          ▼
-      Relations (Typed, Directed Edges)
-      ├── CALLS
-      ├── USES
-      ├── INHERITS
-      └── DEFINES
+```mermaid
+graph TD
+    Project --> Symbols
+    Symbols --> Functions
+    Symbols --> Classes
+    Symbols --> Variables
+    Functions -->|CALLS| Functions
+    Classes -->|INHERITS| Classes
+    Functions -->|USES| Variables
 ```
 
 ### Key Design Decisions
 
-- **SQL-first schema**: Leverages PostgreSQL's ACID guarantees and query optimization
-- **Stable UUID identity**: Enables consistent symbol tracking across repository changes
-- **Idempotent ingestion**: Re-indexing never creates duplicates
-- **Resolution-aware relationships**: Captures both syntactic and semantic dependencies
-- **Cascade-safe integrity**: Graph operations maintain referential consistency
+- **SQL-first schema**: Leverages PostgreSQL's ACID guarantees and recursive CTEs for hierarchy.
+- **AST-Based Parsing**: Uses **Tree-sitter** for accurate, error-tolerant symbol extraction (not Regex).
+- **Idempotent Ingestion**: Re-indexing updates existing records via `ON CONFLICT` logic; never creates duplicates.
+- **Dockerized Architecture**: Fully containerized environment ensuring "write once, run anywhere" reliability.
 
 ---
 
 ## Current Capabilities
 
-<<<<<<< HEAD
-* **Core Backend:** Python 3.9+ (FastAPI)
-* **Performance Module:** C++ 17 (CMake)
-* **Infrastructure:** Docker, Docker Compose
-* **Data:** PostgreSQL (Metadata), Elasticsearch (Search), [OPTIONAL] FAISS
-=======
-### ✅ Repository Crawling
-- Recursive project tree traversal
+### Phase 1: Complete
+
+**Repository Ingestion**
+- Recursive directory scanning (`ingest_files.py`)
 - Source file identification and normalization
-- Language detection via file extensions
-- Path canonicalization
+- **Tree-sitter Integration**: parsing Python code into Abstract Syntax Trees (AST)
 
-### ✅ Knowledge Graph Schema
-- Implemented in PostgreSQL with full ACID compliance
-- Symbol storage with rich metadata
-- Typed relationship edges
-- Efficient graph traversal queries
-
-### ✅ CLI-First Architecture
-- Command-line driven operation
-- Scriptable and automatable workflows
-- Designed for CI/CD integration
-- UI layer to be added in later phases
-
->>>>>>> 77ab5fcbb295106a05b0f2e8a179ee3dfa8a8f08
----
-
-## What CodeSeer Is *Not*
-
-- ❌ A regex-based code search tool
-- ❌ A Copilot-style code generator  
-- ❌ A language-specific linter or analyzer
-- ❌ A visualization-only project
-
-These capabilities can be *built on top* of CodeSeer's knowledge graph—they are not the foundation.
+**Knowledge Graph Storage**
+- **Hierarchical Schema**: Symbols stored with `parent_id` pointers (Module → Class → Method)
+- **Identity Management**: Stable UUID generation for every code symbol
+- **Data Integrity**: Foreign key constraints enforce project and parent linkages
 
 ---
 
 ## Roadmap
 
-### Phase 0 — Foundations ✅
-- Repository structure
-- CLI entry point
-- Semantic search prototype
-- Dockerized development environment
+### Phase 1: Foundations (Complete)
 
-### Phase 1 — Knowledge Model ✅
-- Symbol taxonomy definition
-- Relationship vocabulary
-- PostgreSQL schema design
-- Core data model locked
+- [x] Docker environment setup (Indexer + Postgres)
+- [x] Database Schema Design (Symbols, Projects)
+- [x] Tree-sitter Parser Integration
+- [x] Symbol Extractor & Mapper
+- [x] Idempotent "Upsert" Writer
 
-### Phase 2 — Parsing & Ingestion 🚧 *In Progress*
-- File crawling implementation
-- Symbol-only ingestion (first pass)
-- Idempotent database population
-- Tree-sitter integration (planned)
+### Phase 2: Connectivity (In Progress)
 
-### Phase 3 — Query Engine 🔜
-- Call graph traversal
-- Dependency chain analysis
-- Impact analysis queries
-- Bounded graph exploration
+- [ ] Import Resolution (Linking `from x import y`)
+- [ ] Scope Analysis (Local vs Global variables)
+- [ ] Call Graph Population
+- [ ] Recursive Dependency Queries
 
-### Phase 4 — Semantic Layer 🔜
-- Symbol-aligned code chunking
-- Vector embeddings integration
-- Intent-based semantic search
+### Phase 3: Semantic Intelligence
 
-### Phase 5 — Interface 🔜
-- Enhanced CLI with rich queries
-- REST API (optional)
-- Web-based visualization
-- Dependency graph rendering
+- [ ] `pgvector` Integration
+- [ ] Code Embedding Generation
+- [ ] Semantic Search API
 
-### Phase 6 — Intelligence Layer 🔜
-- Architecture summarization
-- AI-powered change impact reasoning
-- Intelligent code navigation
+### Phase 4: Interface
+
+- [ ] CLI Polish
+- [ ] Terminal UI (TUI)
+- [ ] Web Visualization
 
 ---
 
 ## Tech Stack
 
 | Component | Technology |
-|-----------|-----------|
-| **Core Language** | Python 3.9+ |
-| **Analysis Modules** | C++ (for performance-critical paths) |
-| **Database** | PostgreSQL 13+ |
-| **Schema Management** | SQL-first approach |
-| **Parsing** | Tree-sitter (planned) |
-| **Semantic Search** | Vector embeddings (planned) |
-| **Deployment** | Docker, CLI-first |
+| --- | --- |
+| **Core Logic** | Python 3.10+ |
+| **Parsing Engine** | Tree-sitter (Python Bindings) |
+| **Database** | PostgreSQL 15 (Relational Data) |
+| **Search Engine** | Elasticsearch 8 (Text Search) |
+| **Infrastructure** | Docker & Docker Compose |
 
 ---
 
@@ -172,96 +108,54 @@ These capabilities can be *built on top* of CodeSeer's knowledge graph—they ar
 
 ### Prerequisites
 
-```bash
-# Required
-- Python 3.9+
-- PostgreSQL 13+
-- Docker (recommended)
-```
+- Docker Desktop (Running)
+- Git
 
-### Installation
+### Installation & Usage
 
+CodeSeer runs entirely within Docker to ensure a consistent environment.
+
+**1. Clone the repository**
 ```bash
-# Clone the repository
 git clone https://github.com/RajX-dev/CODESEER-MAIN.git
 cd CODESEER-MAIN
-
-# Configure environment
-cp .env.example .env
-# Edit .env with your PostgreSQL credentials if needed
-
-# Set up environment
-docker-compose up -d
-
-# Initialize database schema
-python cli.py init
-
-# Index a repository
-python cli.py index /path/to/your/repo
 ```
 
-### Basic Usage
+**2. Start the Infrastructure**
 
+This spins up PostgreSQL and Elasticsearch in the background.
 ```bash
-# Index a codebase
-python cli.py index /path/to/your/project
-
-# Query for a specific symbol
-python cli.py query --symbol "MyClass"
-
-# Find all callers of a function
-python cli.py query --callers "process_data"
-
-# Analyze dependencies
-python cli.py deps --from "module.function"
-
-# Get symbol information
-python cli.py info --symbol "UserService.authenticate"
+docker-compose up -d
 ```
 
-> **Note:** Query commands shown are representative of planned functionality. Current implementation focuses on ingestion pipeline.
+**3. Build the Indexer**
 
----
+Compiles the Python environment and Tree-sitter grammars.
+```bash
+docker-compose build indexer
+```
 
-## Project Status
+**4. Run Ingestion (Self-Index)**
 
-**Active Development** | **Sprint-Based Phases**
+Tells CodeSeer to scan itself as a test.
+```bash
+docker-compose run --rm indexer python ingest_files.py
+```
 
-- ✅ Schema design completed and locked
-- 🚧 Ingestion pipeline under construction
-- 📋 Query engine in design phase
+**5. Verify Data**
 
-This project prioritizes **correctness, debuggability, and long-term scalability** over short-term demos.
+Check the database to see the extracted symbols.
+```bash
+docker exec -it codeseer-postgres psql -U codeseer -d codeseer -c "SELECT kind, name, file_path FROM symbols LIMIT 10;"
+```
 
 ---
 
 ## Design Principles
 
-1. **Build for understanding, not just search** — CodeSeer models how code works, not just what it says
-2. **Structure is queryable truth** — Relationships matter more than content
-3. **CLI-first, UI-later** — Automation and scripting before visualization
-4. **Correct before clever** — Solve the hard problem correctly first
-5. **Scale from day one** — Architecture designed for enterprise-scale codebases
-
----
-
-## Guiding Philosophy
-
-> *If we cannot explain the system to a senior engineer, the system is not finished.*
-
-CodeSeer is being built as a **production-grade systems project**, not a proof of concept. Every phase is designed to survive refactors, scale to millions of lines of code, and stand up to rigorous technical scrutiny.
-
----
-
-## Contributing
-
-This project is currently in active development. Contributions, feedback, and architectural discussions are welcome.
-
----
-
-## License
-
-MIT License (see LICENSE file for details)
+1. **Structure before semantics:** We map the code skeleton (AST) before adding AI brains.
+2. **Correctness over speed:** The parser must handle syntax errors gracefully.
+3. **Database as the Source of Truth:** All state lives in Postgres, not in Python memory.
 
 ---
 
