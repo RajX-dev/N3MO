@@ -182,10 +182,13 @@ cd N3MO
 # 2. Install the wrapper (development mode)
 pip install -e .
 
-# 3. Start infrastructure & index (automatic via wrapper)
+# 3. Spin up the infrastructure
+docker-compose up -d
+
+# 4. Start infrastructure & index (automatic via wrapper)
 n3mo index
 
-# 4. Verify installation
+# 5. Verify installation
 n3mo query --stats
 ```
 
