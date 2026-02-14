@@ -292,16 +292,16 @@ n3mo export --format dot > deps.dot
 | | Symbol Extraction | ✅ Complete | Day 9-10 |
 | **Phase 2: Connectivity** | | | |
 | | Import Resolution | ✅ Complete | Day 11-14 |
-| | Graph Builder | 🔵 In Progress | Day 15-19 |
+| | Graph Builder | ✅ Complete | Day 15-19 |
 | | Scope Analysis | ⏳ Planned | Day 20-22 |
 | **Phase 3: Performance** | | | |
 | | Smart File Filtering | ✅ Complete | Day 23 |
 | | **Parallel Processing** | **🔵 Active** | **Day 24-26** |
 | | Batch DB Operations | ⏳ Planned | Day 27-28 |
 | **Phase 4: Interface** | | | |
-| | CLI Enhancement | ⏳ Planned | Day 29-31 |
-| | Web Visualization | ⏳ Planned | Day 32-36 |
-| | CI/CD Integration | ⏳ Planned | Day 37-39 |
+| | CLI Enhancement | 🔵 Active | Day 29-31 |
+| | Web Visualization | 🔵 Active | Day 32-36 |
+| | CI/CD Integration | 🔵 Active | Day 37-39 |
 
 **Legend:** ✅ Complete | 🔵 In Progress | ⏳ Planned
 
