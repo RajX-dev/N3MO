@@ -92,24 +92,22 @@ document.head.appendChild(o)}initApollo();</script>
 
 <body>
 
-    <div id="grain-overlay"></div>
+    <div id="scroll-progress"></div>
 
-
-    <div id="ambient-field">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
-        <div class="orb orb-4"></div>
+    <!-- ── Apple-Grade Ambient Background System ── -->
+    <div class="apple-bg-container" aria-hidden="true">
+        <div class="apple-aurora aurora-1"></div>
+        <div class="apple-aurora aurora-2"></div>
+        <div class="apple-aurora aurora-3"></div>
+        <div class="apple-aurora aurora-4"></div>
+        <div class="apple-grid-matrix"></div>
+        <div class="apple-mouse-glow" id="apple-mouse-glow"></div>
     </div>
-
-
-    <div class="cur-dot"></div>
-    <div class="cursor-glow"></div>
 
     <header>
         <div class="nav-container">
             <div class="logo">
-                <a href="/"><img src="logo.svg" alt="N3MO Logo" style="height: 42px; width: auto;"></a>
+                <a href="/"><img src="logo.svg" alt="N3MO Logo" style="height: 32px; width: auto;"></a>
             </div>
             <nav>
                 <a href="/#features">Features</a>
@@ -140,27 +138,39 @@ document.head.appendChild(o)}initApollo();</script>
     </section>
 
     <footer>
+        <div class="footer-three-wrap" aria-hidden="true">
+            <canvas id="footer-three-canvas"></canvas>
+            <div class="footer-three-overlay"></div>
+        </div>
         <div class="container footer-content site-footer">
-            <div class="footer-links">
-                <a href="about.html">About Us</a>
-                <a href="contact.html">Contact Us</a>
-                <a href="shipping-policy.html">Shipping Policy</a>
-                <a href="refund-policy.html">Refund Policy</a>
-                <a href="terms.html">Terms & Conditions</a>
-                <a href="privacy.html">Privacy Policy</a>
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <img src="logo.svg" alt="N3MO" height="28" style="height:28px;width:auto;opacity:0.85;">
+                    <p class="footer-brand-desc">Structural code intelligence for engineering teams.</p>
+                </div>
+                <div class="footer-links">
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="terms.html">Terms</a>
+                    <a href="privacy.html">Privacy</a>
+                    <a href="refund-policy.html">Refund Policy</a>
+                </div>
             </div>
-            <div class="footer-socials">
-                <a href="https://github.com/RajX-dev/N3MO" target="_blank" rel="noopener noreferrer"
-                    aria-label="GitHub">
-                    <i class="fa-brands fa-github"></i>
-                </a>
-                <a href="https://twitter.com/n3mo_ai" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                    <i class="fa-brands fa-x-twitter"></i>
-                </a>
+            <div class="footer-bottom">
+                <p class="footer-copyright">Copyright &copy; 2026 N3MO Code Intelligence. All rights reserved.</p>
+                <div class="footer-socials">
+                    <a href="https://github.com/RajX-dev/N3MO" target="_blank" rel="noopener noreferrer"
+                        aria-label="GitHub">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                    <a href="https://twitter.com/n3mo_ai" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                        <i class="fa-brands fa-x-twitter"></i>
+                    </a>
+                </div>
             </div>
-            <p class="footer-copyright">Copyright &copy; 2026 N3MO Code Intelligence. All rights reserved.</p>
         </div>
     </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="script.js"></script>
 </body>
 

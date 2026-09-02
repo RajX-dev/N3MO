@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    N3MO — Apple-Inspired Design System
    Font: Inter · JetBrains Mono (code)
    Palette: #000 black · #1d1d1f charcoal · #f5f5f7 off-white
@@ -56,7 +56,124 @@ body {
     padding: 0 24px;
 }
 
-/* Hide decorative noise */
+/* ============================================================
+   Apple-Inspired Ambient Background System
+   ============================================================ */
+.apple-bg-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+    background: #000000;
+}
+
+/* Organic drifting aurora glows */
+.apple-aurora {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.42;
+    mix-blend-mode: screen;
+    will-change: transform, opacity;
+    pointer-events: none;
+}
+
+.aurora-1 {
+    top: -12%;
+    left: 12%;
+    width: 65vw;
+    height: 60vh;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.28) 0%, rgba(139, 92, 246, 0.12) 45%, transparent 75%);
+    animation: appleAuroraFloat1 22s ease-in-out infinite alternate;
+}
+
+.aurora-2 {
+    top: 30%;
+    right: -10%;
+    width: 58vw;
+    height: 62vh;
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.22) 0%, rgba(244, 63, 94, 0.08) 50%, transparent 75%);
+    animation: appleAuroraFloat2 26s ease-in-out infinite alternate;
+}
+
+.aurora-3 {
+    bottom: -15%;
+    left: 18%;
+    width: 62vw;
+    height: 55vh;
+    background: radial-gradient(circle, rgba(20, 184, 166, 0.20) 0%, rgba(59, 130, 246, 0.10) 45%, transparent 75%);
+    animation: appleAuroraFloat3 24s ease-in-out infinite alternate;
+}
+
+.aurora-4 {
+    top: 55%;
+    left: -12%;
+    width: 48vw;
+    height: 52vh;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.18) 0%, rgba(99, 102, 241, 0.06) 50%, transparent 75%);
+    animation: appleAuroraFloat4 28s ease-in-out infinite alternate;
+}
+
+@keyframes appleAuroraFloat1 {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(50px, 40px) scale(1.08); }
+    100% { transform: translate(-35px, 70px) scale(0.95); }
+}
+
+@keyframes appleAuroraFloat2 {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-60px, -45px) scale(1.10); }
+    100% { transform: translate(40px, -25px) scale(0.94); }
+}
+
+@keyframes appleAuroraFloat3 {
+    0% { transform: translate(0, 0) scale(0.96); }
+    50% { transform: translate(-45px, -50px) scale(1.08); }
+    100% { transform: translate(55px, -25px) scale(1.02); }
+}
+
+@keyframes appleAuroraFloat4 {
+    0% { transform: translate(0, 0) scale(1.04); }
+    50% { transform: translate(65px, -35px) scale(0.94); }
+    100% { transform: translate(-25px, 50px) scale(1.08); }
+}
+
+/* Precision blueprint schematic micro-grid */
+.apple-grid-matrix {
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 48px 48px;
+    background-position: center center;
+    mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 65%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 65%, transparent 100%);
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Interactive Cursor Ambient Glow */
+.apple-mouse-glow {
+    position: absolute;
+    width: 650px;
+    height: 650px;
+    border-radius: 50%;
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, rgba(245, 158, 11, 0.05) 35%, transparent 70%);
+    filter: blur(45px);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    mix-blend-mode: screen;
+    will-change: transform, left, top;
+}
+
+/* Hide legacy unused decorative elements */
 #grain-overlay, #ambient-field, .orb, .cursor-glow, .cur-dot { display: none !important; }
 
 /* Scroll Progress */
@@ -523,17 +640,7 @@ h1 {
 .p-link-container a { color: var(--text-primary); text-decoration: none; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.15); transition: border-color 0.2s; }
 .p-link-container a:hover { border-color: rgba(255,255,255,0.4); }
 
-/* ── Footer ── */
-footer { border-top: 1px solid var(--border-color); padding: 40px 0; background: var(--bg-primary); position: relative; z-index: 10; }
-.site-footer { padding: 40px 0; }
-.footer-content { display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center; font-size: 12px; color: var(--text-muted); }
-.footer-links { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
-.footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 12px; transition: color 0.2s; }
-.footer-links a:hover { color: var(--text-primary); }
-.footer-socials { display: flex; gap: 22px; justify-content: center; }
-.footer-socials a { color: var(--text-secondary); text-decoration: none; font-size: 16px; transition: color 0.2s; }
-.footer-socials a:hover { color: var(--text-primary); }
-.footer-copyright { color: var(--text-muted); font-size: 12px; }
+/* ── Footer legacy clearance ── */
 
 /* ── Scroll Reveal ── */
 .reveal-fade { opacity: 0; transform: translateY(28px); transition: opacity 0.65s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.65s cubic-bezier(0.25,0.46,0.45,0.94); }
@@ -705,14 +812,13 @@ body {
 
 /* ── Bottom CTA Section ── */
 .bottom-cta {
-    background: var(--bg-alt);
+    background: transparent;
     padding: 140px 0;
     text-align: center;
     position: relative;
     z-index: 2;
-    /* Radial glow from top */
-    background: radial-gradient(ellipse 70% 60% at 50% 100%, rgba(245,158,11,0.06) 0%, transparent 60%),
-                var(--bg-alt);
+    /* Soft warm glow towards footer */
+    background: radial-gradient(ellipse 70% 60% at 50% 100%, rgba(245,158,11,0.06) 0%, transparent 65%);
 }
 
 .cta-eyebrow {
@@ -755,57 +861,190 @@ body {
     font-size: 15px;
 }
 
-/* ── Footer upgrade — Apple dense footer ── */
+/* ============================================================
+   Three.js 3D Animated Footer
+   ============================================================ */
 footer {
-    border-top: 1px solid var(--border-color);
-    padding: 48px 0 32px;
-    background: var(--bg-primary);
+    position: relative;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 110px 0 54px;
+    background: #000000;
+    overflow: hidden;
+    min-height: 480px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    z-index: 5;
 }
+
+.footer-three-wrap {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+#footer-three-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: auto;
+}
+
+.footer-three-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    background: linear-gradient(180deg, 
+        rgba(0, 0, 0, 0.75) 0%, 
+        rgba(0, 0, 0, 0.1) 20%, 
+        rgba(0, 0, 0, 0.0) 50%, 
+        rgba(0, 0, 0, 0.15) 80%,
+        rgba(0, 0, 0, 0.7) 100%
+    );
+}
+
 .footer-content {
+    position: relative;
+    z-index: 3;
+    max-width: 1040px;
+    width: 100%;
+    margin: 0 auto;
+    background: rgba(10, 10, 14, 0.38);
+    backdrop-filter: blur(20px) saturate(190%);
+    -webkit-backdrop-filter: blur(20px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 24px;
+    padding: 38px 44px 30px;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.5), 
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        0 0 40px rgba(245, 158, 11, 0.04);
+    display: flex;
+    flex-direction: column;
     gap: 28px;
 }
+
 .footer-top {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     width: 100%;
-    padding-bottom: 24px;
-    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 22px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     flex-wrap: wrap;
     gap: 24px;
 }
+
 .footer-brand {
     display: flex;
     flex-direction: column;
     gap: 8px;
     align-items: flex-start;
 }
+
+.footer-brand img {
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.footer-brand:hover img {
+    opacity: 1 !important;
+    transform: translateY(-1px);
+}
+
 .footer-brand-desc {
-    font-size: 12px;
-    color: var(--text-muted);
-    max-width: 200px;
-    line-height: 1.5;
-}
-.footer-links {
-    gap: 20px;
-}
-.footer-links a {
     font-size: 12.5px;
     color: var(--text-secondary);
-    opacity: 0.8;
+    max-width: 260px;
+    line-height: 1.5;
+    opacity: 0.85;
 }
-.footer-links a:hover { opacity: 1; color: var(--text-primary); }
+
+.footer-links {
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.footer-links a {
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    transition: color 0.2s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+}
+
+.footer-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0%;
+    height: 1px;
+    background: var(--accent);
+    transition: width 0.25s ease;
+}
+
+.footer-links a:hover {
+    color: var(--text-primary);
+    transform: translateY(-1px);
+}
+.footer-links a:hover::after {
+    width: 100%;
+}
+
 .footer-bottom {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 14px;
 }
+
 .footer-copyright {
     font-size: 12px;
     color: var(--text-muted);
+}
+
+.footer-socials {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.footer-socials a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.25s ease;
+}
+
+.footer-socials a:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
 }
 
 /* ── Nav refinement ── */
