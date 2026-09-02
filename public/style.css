@@ -57,7 +57,7 @@ body {
 }
 
 /* ============================================================
-   Apple-Inspired Ambient Background System
+   Subtle & Sleek Ambient Background System
    ============================================================ */
 .apple-bg-container {
     position: fixed;
@@ -68,53 +68,52 @@ body {
     pointer-events: none;
     z-index: 0;
     overflow: hidden;
-    background: #000000;
+    background: #050508;
 }
 
-/* Organic drifting aurora glows */
+/* Organic drifting aurora glows — soft, dark, ultra-subtle ambient lighting */
 .apple-aurora {
     position: absolute;
     border-radius: 50%;
-    filter: blur(100px);
-    opacity: 0.42;
-    mix-blend-mode: screen;
-    will-change: transform, opacity;
+    filter: blur(140px);
+    opacity: 0.14;
+    will-change: transform;
     pointer-events: none;
 }
 
 .aurora-1 {
     top: -12%;
     left: 12%;
-    width: 65vw;
-    height: 60vh;
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.28) 0%, rgba(139, 92, 246, 0.12) 45%, transparent 75%);
+    width: 60vw;
+    height: 55vh;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.16) 0%, rgba(139, 92, 246, 0.04) 50%, transparent 75%);
     animation: appleAuroraFloat1 22s ease-in-out infinite alternate;
 }
 
 .aurora-2 {
     top: 30%;
     right: -10%;
-    width: 58vw;
-    height: 62vh;
-    background: radial-gradient(circle, rgba(245, 158, 11, 0.22) 0%, rgba(244, 63, 94, 0.08) 50%, transparent 75%);
+    width: 55vw;
+    height: 58vh;
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.10) 0%, rgba(244, 63, 94, 0.03) 50%, transparent 75%);
     animation: appleAuroraFloat2 26s ease-in-out infinite alternate;
 }
 
 .aurora-3 {
     bottom: -15%;
     left: 18%;
-    width: 62vw;
-    height: 55vh;
-    background: radial-gradient(circle, rgba(20, 184, 166, 0.20) 0%, rgba(59, 130, 246, 0.10) 45%, transparent 75%);
+    width: 58vw;
+    height: 50vh;
+    background: radial-gradient(circle, rgba(14, 165, 233, 0.10) 0%, rgba(99, 102, 241, 0.03) 50%, transparent 75%);
     animation: appleAuroraFloat3 24s ease-in-out infinite alternate;
 }
 
 .aurora-4 {
     top: 55%;
     left: -12%;
-    width: 48vw;
-    height: 52vh;
-    background: radial-gradient(circle, rgba(168, 85, 247, 0.18) 0%, rgba(99, 102, 241, 0.06) 50%, transparent 75%);
+    width: 45vw;
+    height: 48vh;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, transparent 70%);
     animation: appleAuroraFloat4 28s ease-in-out infinite alternate;
 }
 
@@ -862,53 +861,14 @@ body {
 }
 
 /* ============================================================
-   Three.js 3D Animated Footer
+   Sleek Dark & High-Contrast Footer
    ============================================================ */
 footer {
     position: relative;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 110px 0 54px;
-    background: #000000;
-    overflow: hidden;
-    min-height: 480px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 60px 0 44px;
+    background: #050508;
     z-index: 5;
-}
-
-.footer-three-wrap {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-    overflow: hidden;
-}
-
-#footer-three-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
-    pointer-events: auto;
-}
-
-.footer-three-overlay {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 2;
-    background: linear-gradient(180deg, 
-        rgba(0, 0, 0, 0.75) 0%, 
-        rgba(0, 0, 0, 0.1) 20%, 
-        rgba(0, 0, 0, 0.0) 50%, 
-        rgba(0, 0, 0, 0.15) 80%,
-        rgba(0, 0, 0, 0.7) 100%
-    );
 }
 
 .footer-content {
@@ -917,19 +877,14 @@ footer {
     max-width: 1040px;
     width: 100%;
     margin: 0 auto;
-    background: rgba(10, 10, 14, 0.38);
-    backdrop-filter: blur(20px) saturate(190%);
-    -webkit-backdrop-filter: blur(20px) saturate(190%);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 24px;
-    padding: 38px 44px 30px;
-    box-shadow: 
-        0 20px 60px rgba(0, 0, 0, 0.5), 
-        inset 0 1px 0 rgba(255, 255, 255, 0.12),
-        0 0 40px rgba(245, 158, 11, 0.04);
+    background: #0d0e14;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    padding: 32px 40px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 24px;
 }
 
 .footer-top {
@@ -937,16 +892,16 @@ footer {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding-bottom: 22px;
+    padding-bottom: 20px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     flex-wrap: wrap;
-    gap: 24px;
+    gap: 20px;
 }
 
 .footer-brand {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     align-items: flex-start;
 }
 
@@ -959,11 +914,10 @@ footer {
 }
 
 .footer-brand-desc {
-    font-size: 12.5px;
-    color: var(--text-secondary);
-    max-width: 260px;
+    font-size: 13px;
+    color: #94a3b8;
+    max-width: 280px;
     line-height: 1.5;
-    opacity: 0.85;
 }
 
 .footer-links {
@@ -974,10 +928,10 @@ footer {
 }
 
 .footer-links a {
-    font-size: 13px;
-    color: var(--text-secondary);
+    font-size: 13.5px;
+    color: #e2e8f0;
     text-decoration: none;
-    font-weight: 400;
+    font-weight: 450;
     letter-spacing: -0.01em;
     transition: color 0.2s ease, transform 0.2s ease;
     display: inline-flex;
@@ -997,7 +951,7 @@ footer {
 }
 
 .footer-links a:hover {
-    color: var(--text-primary);
+    color: #ffffff;
     transform: translateY(-1px);
 }
 .footer-links a:hover::after {
@@ -1014,8 +968,8 @@ footer {
 }
 
 .footer-copyright {
-    font-size: 12px;
-    color: var(--text-muted);
+    font-size: 12.5px;
+    color: #94a3b8;
 }
 
 .footer-socials {
@@ -1028,23 +982,23 @@ footer {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #e2e8f0;
     text-decoration: none;
-    font-size: 14px;
+    font-size: 15px;
     transition: all 0.25s ease;
 }
 
 .footer-socials a:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.28);
     color: #ffffff;
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
 }
 
 /* ── Nav refinement ── */
