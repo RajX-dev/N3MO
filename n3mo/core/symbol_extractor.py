@@ -270,6 +270,11 @@ def _visit_generic(node, current_scope_id, symbols, calls, imports, file_path, l
                     name = name_node.text.decode("utf-8", errors="ignore")
         elif node_type in ("call_expression", "method_call", "invocation_expression"):
             func_node = node.child_by_field_name("function") or node.child_by_field_name("expression") or node.child_by_field_name("name")
+            if func_node is None:
+                func_node = next(
+                    (c for c in node.children if c.type in ("identifier", "simple_identifier")),
+                    None,
+                )
             if func_node and current_scope_id:
                 call_text = func_node.text.decode("utf-8", errors="ignore")
                 calls.append({
