@@ -1,6 +1,7 @@
 import os
 import sys
 import logging
+import subprocess
 import urllib.request
 import urllib.error
 import json
@@ -33,7 +34,7 @@ def fetch_pr_details(repo_full_name: str, pr_number: str) -> dict:
         }
     )
     
-    with urllib.request.urlopen(req) as resp:
+    with urllib.request.urlopen(req, timeout=30) as resp:
         return json.loads(resp.read().decode())
 
 def main():
@@ -45,7 +46,7 @@ def main():
         logger.error("Missing TARGET_REPO or PR_NUMBER in environment")
         sys.exit(1)
     
-    logger.info("≡ƒÜÇ N3MO CORE ENGINE WAKING UP ≡ƒÜÇ")
+    logger.info("🚀 N3MO CORE ENGINE WAKING UP 🚀")
     logger.info(f"Target Repository: {target_repo}")
     logger.info(f"Pull Request: #{pr_number}")
     logger.info(f"User ID: {user_id}")
@@ -68,8 +69,7 @@ def main():
         
         # We need to fetch the PR ref so that the head_sha is available locally
         logger.info(f"Fetching PR #{pr_number} commits...")
-        import subprocess
-        subprocess.run(["git", "fetch", "origin", f"pull/{pr_number}/head:pr-{pr_number}"], cwd=repo_dir, check=True)
+        subprocess.run(["git", "fetch", "origin", f"pull/{pr_number}/head:pr-{pr_number}"], cwd=repo_dir, check=True, timeout=120)
         
         # We need changed files to know what to index/query
         logger.info("Determining changed files...")
@@ -105,7 +105,7 @@ def main():
         if max_loc > 0 and total_lines > max_loc:
             logger.warning(f"LOC limit exceeded for {target_repo}: {total_lines} LOC (Limit: {max_loc} for {plan_name})")
             warning_msg = (
-                f"### ΓÜá∩╕Å N3MO Tier Limit Reached ({plan_name})\n\n"
+                f"### ⚠️ N3MO Tier Limit Reached ({plan_name})\n\n"
                 f"This repository contains **{total_lines:,} lines of code**, which exceeds N3MO's limit of **{max_loc:,} lines** for this plan.\n\n"
                 f"To enable PR checks on this repository, please:\n"
                 f"1. **Upgrade your plan** on our SaaS platform to activate a Pro or Enterprise subscription, or\n"
@@ -113,7 +113,7 @@ def main():
                 f"*Already upgraded? Make sure your payment is active in the dashboard.*"
             )
             post_github_comment(target_repo, int(pr_number), warning_msg, os.getenv("INSTALLATION_ID"))
-            logger.info("Γ£à Exited early due to LOC limit.")
+            logger.info("✅ Exited early due to LOC limit.")
             sys.exit(0)
         
         logger.info("Indexing base commit...")
@@ -124,7 +124,7 @@ def main():
         
         # 3. Checkout head_sha and index
         logger.info(f"Checking out head commit: {head_sha}")
-        checkout_repo(clone_url, target_repo, head_sha)
+        repo_dir = checkout_repo(clone_url, target_repo, head_sha)
         
         logger.info("Indexing head commit...")
         run_indexer_for_path(repo_dir)
@@ -141,15 +141,19 @@ def main():
         logger.info("Posting report to GitHub PR...")
         post_github_comment(target_repo, int(pr_number), markdown_report, os.getenv("INSTALLATION_ID"))
         
-        logger.info("Γ£à N3MO Core Engine finished successfully!")
+        logger.info("✅ N3MO Core Engine finished successfully!")
         
     except Exception as e:
         logger.error(f"Core Engine Pipeline Failed: {e}")
         logger.error(traceback.format_exc())
         
         # Post error to PR so the user knows it failed
-        error_md = f"### ΓÜá∩╕Å N3MO Core Engine Failed\n\nAn error occurred during AST analysis:\n```\n{e}\n```"
-        post_github_comment(target_repo, int(pr_number), error_md, os.getenv("INSTALLATION_ID"))
+        if target_repo and pr_number:
+            try:
+                error_md = f"### ⚠️ N3MO Core Engine Failed\n\nAn error occurred during AST analysis:\n```\n{e}\n```"
+                post_github_comment(target_repo, int(pr_number), error_md, os.getenv("INSTALLATION_ID"))
+            except Exception:
+                logger.error("Additionally failed to post error comment to GitHub PR.")
         sys.exit(1)
 
 if __name__ == "__main__":

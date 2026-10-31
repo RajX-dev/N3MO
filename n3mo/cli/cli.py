@@ -8,7 +8,7 @@
 import sys
 import os
 import argparse
-from n3mo.core.database import get_connection
+from n3mo.core.database import get_connection, release_connection
 from n3mo.cli.graph_visualizer import generate_solar_graph_html
 
 from typing import Any
@@ -21,7 +21,6 @@ try:
 except ImportError:
     pass
 
-# Dummy comment to trigger webhook impact analysis
 # ==========================================
 # 🛠️ HELPER FUNCTIONS
 # ==========================================
@@ -247,7 +246,7 @@ def cmd_impact(args):
         print(f"\n  {RED}✗  Error:{R} {e}\n")
     finally:
         if conn:
-            conn.close()
+            release_connection(conn)
         # Keep the file so the server can actually serve it!
         # if filename and os.path.exists(filename):
         #     os.remove(filename)
@@ -266,7 +265,7 @@ def cmd_clean(args):
             else:
                 print(f"⚠️  No index found for {target_dir}")
     finally:
-        conn.close()
+        release_connection(conn)
 
 
 def cmd_setup(args):
@@ -501,7 +500,7 @@ def main():
     parser_hook_install = hook_subparsers.add_parser('install')
     parser_hook_install.add_argument('--target-dir', help="Path to project directory (default: current directory)", default=None)
     parser_hook_install.set_defaults(func=cmd_hook)
-    parser_hook.set_defaults(func=cmd_hook)
+    parser_hook.set_defaults(func=cmd_hook, target_dir=None)
 
     parser_impact = subparsers.add_parser('impact')
     parser_impact.add_argument('symbol')

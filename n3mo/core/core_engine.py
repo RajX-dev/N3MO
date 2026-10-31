@@ -251,7 +251,6 @@ def get_github_app_installation_token(app_id, private_key_env, private_key_path,
     
     try:
         with urllib.request.urlopen(req) as resp:
-            import json
             data = json.loads(resp.read().decode())
             return data.get("token")
     except urllib.error.HTTPError as e:

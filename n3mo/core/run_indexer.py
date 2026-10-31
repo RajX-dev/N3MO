@@ -395,9 +395,6 @@ def run_indexer_for_path(target_dir):
                 logger.error(f"❌ Aborting indexing due to database connection error: {e}")
                 return False, f"Database connection error: {e}"
 
-        # Clear previous residues from OTHER repositories
-        clear_all_data(exclude_url=target_dir)
-
         # Setup Project
         project_name = os.path.basename(target_dir)
         try:

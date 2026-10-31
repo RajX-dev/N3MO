@@ -325,8 +325,8 @@ if Server is not None:
                         return [types.TextContent(type="text", text=f"Symbol '{symbol_name}' not found.")]
                     
                     out = [f"Found {len(results)} definitions for '{symbol_name}':"]
-                    for name, file_path, kind, sig, line in results:
-                        out.append(f"- {kind} {name} at {file_path}:{line}")
+                    for sym_name, file_path, kind, sig, line in results:
+                        out.append(f"- {kind} {sym_name} at {file_path}:{line}")
                         if sig:
                             out.append(f"  Signature: {sig}")
                     return [types.TextContent(type="text", text="\n".join(out))]
