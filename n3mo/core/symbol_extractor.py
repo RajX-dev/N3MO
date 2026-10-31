@@ -270,6 +270,11 @@ def _visit_generic(node, current_scope_id, symbols, calls, imports, file_path, l
                     name = name_node.text.decode("utf-8", errors="ignore")
         elif node_type in ("call_expression", "method_call", "invocation_expression"):
             func_node = node.child_by_field_name("function") or node.child_by_field_name("expression") or node.child_by_field_name("name")
+            if func_node is None:
+                func_node = next(
+                    (c for c in node.children if c.type in ("identifier", "simple_identifier")),
+                    None,
+                )
             if func_node and current_scope_id:
                 call_text = func_node.text.decode("utf-8", errors="ignore")
                 calls.append({
@@ -394,7 +399,39 @@ def _visit_generic(node, current_scope_id, symbols, calls, imports, file_path, l
                     "alias": None
                 })
 
-    # 5. Dynamic & Scripting Group (Ruby, PHP, Perl, Lua, Julia, Powershell, Groovy, Matlab, Delphi, Haskell)
+    # 5. Ruby Group
+    elif lang == "ruby":
+        if node_type in ("module", "class"):
+            kind = "CLASS"
+            name_node = node.child_by_field_name("name")
+            if name_node:
+                name = name_node.text.decode("utf-8", errors="ignore")
+        elif node_type in ("method", "singleton_method"):
+            kind = "FUNCTION"
+            name_node = node.child_by_field_name("name")
+            if name_node:
+                name = name_node.text.decode("utf-8", errors="ignore")
+        elif node_type == "call":
+            if current_scope_id:
+                call_text = None
+                for child in node.children:
+                    if child.type == "identifier":
+                        call_text = child.text.decode("utf-8", errors="ignore")
+                        break
+                if not call_text:
+                    for child in node.children:
+                        if child.type == "constant":
+                            call_text = child.text.decode("utf-8", errors="ignore")
+                            break
+                if call_text:
+                    calls.append({
+                        "id": str(uuid.uuid4()),
+                        "source_symbol_id": current_scope_id,
+                        "call_name": call_text,
+                        "line_number": node.start_point[0] + 1
+                    })
+
+    # 6. Dynamic & Scripting Group (PHP, Perl, Lua, Julia, Powershell, Groovy, Matlab, Delphi, Haskell)
     else:
         if node_type in (
             "method_declaration", "function_declaration", "function_definition", 
