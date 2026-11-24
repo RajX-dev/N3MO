@@ -9,7 +9,8 @@ import traceback
 
 from n3mo.core.core_engine import (
     checkout_repo, 
-    get_changed_files, 
+    get_changed_files,
+    get_changed_files_with_hunks,
     calculate_repo_loc, 
     get_project_id,
     get_impact_for_changed_files,
@@ -71,9 +72,10 @@ def main():
         logger.info(f"Fetching PR #{pr_number} commits...")
         subprocess.run(["git", "fetch", "origin", f"pull/{pr_number}/head:pr-{pr_number}"], cwd=repo_dir, check=True, timeout=120)
         
-        # We need changed files to know what to index/query
-        logger.info("Determining changed files...")
-        changed_files = get_changed_files(repo_dir, base_sha, head_sha)
+        # We need changed files and exact diff hunks to know what to index/query
+        logger.info("Determining changed files and diff hunks...")
+        diff_info = get_changed_files_with_hunks(repo_dir, base_sha, head_sha)
+        changed_files = diff_info["changed_files"]
         logger.info(f"Changed files: {changed_files}")
         
         total_lines = calculate_repo_loc(repo_dir)
@@ -120,7 +122,14 @@ def main():
         run_indexer_for_path(repo_dir)
         
         project_id = get_project_id(repo_dir)
-        base_impacts = get_impact_for_changed_files(project_id, changed_files)
+        base_impacts = get_impact_for_changed_files(
+            project_id,
+            changed_files,
+            file_line_ranges=diff_info.get("base_ranges", {}),
+            added_files=diff_info.get("added_files", set()),
+            deleted_files=diff_info.get("deleted_files", set()),
+            is_head=False
+        )
         
         # 3. Checkout head_sha and index
         logger.info(f"Checking out head commit: {head_sha}")
@@ -129,7 +138,14 @@ def main():
         logger.info("Indexing head commit...")
         run_indexer_for_path(repo_dir)
         
-        head_impacts = get_impact_for_changed_files(project_id, changed_files)
+        head_impacts = get_impact_for_changed_files(
+            project_id,
+            changed_files,
+            file_line_ranges=diff_info.get("head_ranges", {}),
+            added_files=diff_info.get("added_files", set()),
+            deleted_files=diff_info.get("deleted_files", set()),
+            is_head=True
+        )
         
         # 4. Compare impacts
         logger.info("Calculating AST blast radius...")
